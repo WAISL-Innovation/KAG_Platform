@@ -1,0 +1,14 @@
+pyyaml
+ensure
+python-box
+langchain
+langchain-community
+langchain-openai
+langchain-experimental
+neo4j
+tiktoken
+yfiles_jupyter_graphs
+flask_cors
+docx2txt
+langchain-groq
+sentence-transformers

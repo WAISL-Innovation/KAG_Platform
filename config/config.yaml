@@ -1,0 +1,7 @@
+artifacts_root: artifacts
+
+neo4j_db_info:
+  neo4j_uri: neo4j://127.0.0.1:7687
+  username: neo4j
+model_info:
+  groq_model_name: llama3-70b-8192

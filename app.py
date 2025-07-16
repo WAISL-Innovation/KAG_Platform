@@ -1,4 +1,5 @@
 import sys
+from dotenv import load_dotenv, set_key
 from flask import Flask, request, render_template, redirect, url_for, flash, jsonify
 from werkzeug.utils import secure_filename
 import os
@@ -11,7 +12,8 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 app.config['UPLOAD_FOLDER'] = 'uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-
+load_dotenv()
+GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 
 
 from flask import Flask, request, render_template, redirect, url_for, flash, jsonify
@@ -55,7 +57,7 @@ def kag_chat():
 
         # ✅ JSON Response for Postman
         if request.is_json:
-            return jsonify({"answer": answer})
+            return render_template('graph_kag.html', question=question, answer=answer)
 
     # ✅ HTML page rendering
     return render_template('graph_kag.html', answer=answer)
@@ -93,6 +95,25 @@ def upload_kag():
 
     return render_template('kag_upload.html')
 
+@app.route('/update_api_key', methods=['POST'])
+def update_api_key():
+    new_api_key = request.form['api_key']
+    
+    # Validate the API key format (simple example)
+    if not new_api_key or len(new_api_key) < 30:
+        flash('Invalid API key format', 'danger')
+        return redirect(url_for('index'))
+    
+    # Update the .env file
+    env_path = '.env'
+    set_key(env_path, 'GROQ_API_KEY', new_api_key)
+    
+    # Update the current environment variable
+    global GROQ_API_KEY
+    GROQ_API_KEY = new_api_key
+    
+    flash('API key updated successfully!', 'success')
+    return redirect(url_for('kag_chat'))
 
 if __name__ == '__main__':
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
